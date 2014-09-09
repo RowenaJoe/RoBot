@@ -5,11 +5,6 @@ var request = require('request'),
 	// flowdock
 var apiToken = "",
 	flows = [],
-	// github
-	githubToken = "",
-	githubDomain = null, // null for default
-	// weather underground
-	wunderToken = "";
 	
 // get flow data
 var flowData = {};
@@ -29,7 +24,7 @@ var stream = request(encodeURI("https://" + apiToken + ":DUMMY@stream.flowdock.c
 stream.on('data', function(data) {
 	if (data.event == "message" && typeof data.content == "string") {
 		
-		// check if message is for CheezeBot
+		// check if message is for RoBot
 		var match = data.content.match(/robot (.+)/i);
 		if (match) {
 			var message = match[1];
@@ -68,9 +63,6 @@ function post(reply, data) {
 	});
 }
 
-// timer data
-var timers = [];
-
 
 /* commands:
 each command requires:
@@ -104,14 +96,14 @@ var commands = [
 			return "@" + person + praises[Math.floor(Math.random() * praises.length)];
 		}
 	},
-    {
+        {
     	description: "pathead:\t\t\t\tpraise yourself, you narcissistic weasel",
     	pattern: /^praise/,
     	reply: function () {
     	    var praises = ["is more than average", "is awesomepants!", "is like a a sparkly pony!", "shines like the sun", "is a fracken legend!"];
     	    return "You're " + praises[Math.floor(Math.random() * praises.length)];
     	}
-    },
+        },
 	{
 		description: "{sumthin sumthin} ok?:\t\t\t\tfor reassurance",
 		pattern: /(.+) ^ok?/,
