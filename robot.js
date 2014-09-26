@@ -204,6 +204,35 @@ var commands = [
                     } else console.error("Error requesting recipepuppy: " + JSON.stringify(error || response) + "\n");
                 });
         }
+    },
+    {
+        description: "lolcat {search}:\t\tsearch for a lolcat image",
+        pattern: "^lolcat (.+)",
+        reply: function (match, data) {
+            request(encodeURI("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&safe=active&q=lolcat " + match[1]),
+                function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        var result = JSON.parse(body);
+                        var images = result.responseData.results;
+                        if (images.length > 0) {
+                            var image = images[Math.floor(Math.random() * images.length)];
+                            
+                            post(ensureImageExtension(image.unescapedUrl), data);
+                        }
+                        
+                    }
+                    else {
+                        console.error("Error requesting google image apis: " + JSON.stringify(error || response) + "\n");
+                    }
+                });
+        }
     }
 ];
 
+function ensureImageExtension(url) {
+    var ext = url.split('.').pop();
+    if (ext.match(/(png|jpe?g|gif)/i)) {
+        return url;
+    } else
+        return  url + ".png";
+}
